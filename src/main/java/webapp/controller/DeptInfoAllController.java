@@ -2,6 +2,7 @@ package webapp.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -22,15 +23,15 @@ import webapp.service.DeptInfoService;
 /**
  * Servlet implementation class DeptController
  */
-@WebServlet("/dept/info")
-public class DeptController extends HttpServlet {
+@WebServlet("/dept/infoall")
+public class DeptInfoAllController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Log log = LogFactory.getLog(DeptController.class);
+	private static Log log = LogFactory.getLog(DeptInfoAllController.class);
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DeptController() {
+    public DeptInfoAllController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -55,16 +56,15 @@ public class DeptController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset = utf-8");
-		PrintWriter out = response.getWriter();
-		log.info("dept called...");
-		out.println("<h1>dept called...</h1>");
+		log.info("dept/infoall called...");
+		
 		DeptInfoService service = factory.getBean(DeptInfoService.class);
-		Dept dept = service.getDeptInfo(10);
-		request.setAttribute("dept", dept);
+		List<Dept> dept = service.getDeptInfoAll();
+		request.setAttribute("model", dept);
 		
 		
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/dept/info.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/dept/infoall.jsp");
 		rd.forward(request, response);
 		
 	}
