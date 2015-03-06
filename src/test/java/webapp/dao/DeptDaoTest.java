@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import webapp.dao.DeptDao;
 import webapp.model.Dept;
 import webapp.model.Emp;
 
@@ -69,5 +67,17 @@ public class DeptDaoTest {
 			}
 		}
 	
+	@Test
+	public void test4_SelectAllWithEmps() {
+		DeptDao dao = factory.getBean(DeptDao.class);
+		List<Dept> list = dao.selectAllWithEmps();
+		assertNotNull(list);
+		for (Dept d : list) {
+			log.info(d.getDeptno() + " " + d.getDname() + " " + d.getLoc());
+			for (Emp e : d.getEmps()) {
+				log.info(e.getEmpno() +" " + e.getEname() +" " + e.getJob());
+			}
+		}
+	}
 	
 }

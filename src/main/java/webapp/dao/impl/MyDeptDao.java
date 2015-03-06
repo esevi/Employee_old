@@ -23,11 +23,11 @@ import webapp.model.Dept;
 import webapp.model.Emp;
 import webapp.util.GlobalVars;
 
-public class JdbcDeptDao implements DeptDao {
+public class MyDeptDao implements DeptDao {
 
 	
 //	static Logger log = Logger.getLogger(JdbcDeptDao.class);
-	static Log log = LogFactory.getLog(JdbcDeptDao.class);
+	static Log log = LogFactory.getLog(MyDeptDao.class);
 	DataSource dataSource;
 	
 	@Override
@@ -139,8 +139,6 @@ public class JdbcDeptDao implements DeptDao {
 			
 		} catch (SQLException e) {
 			throw new DataRetrievalFailureException("selectAll()", e);
-			
-		
 		}
 		
 		return list;
@@ -154,44 +152,32 @@ public class JdbcDeptDao implements DeptDao {
 		
 		Connection con = DataSourceUtils.getConnection(dataSource);
 		List<Dept> list = null;
+		
 		try {
-			PreparedStatement pstmt = con. prepareStatement(SELECT_ALL_WITH_EMPS);
+			PreparedStatement pstmt = con.prepareStatement(SELECT_ALL_WITH_EMPS);
 			ResultSet rs = pstmt.executeQuery();
-			Dept dept =null;
-			while(rs.next()) {
-				if(list == null) 
+			Dept dept = null;
+			while (rs.next()) {
+				if (list == null)
 					list = new ArrayList<Dept>();
 				
-				Dept d = new Dept(rs.getInt("deptno"), rs.getString("dname"), rs.getString("loc"));
-				d.setEmps(new ArrayList<Emp>());
-				if(!d.equals(dept)){
-					dept = d;
-					list.add(dept);
-				}
-					
+					Dept d = new Dept(rs.getInt("deptno"), rs.getString("dname"), rs.getString("loc"));
+						d.setEmps(new ArrayList<Emp>());
+						if(d != null){
+							dept = d;
+							list.add(dept);
+						}
+						
 				Emp e = new Emp();
 				e.setEmpno(rs.getInt("empno"));
 				e.setEname(rs.getString("ename"));
 				e.setJob(rs.getString("job"));
-				e.setMgr(rs.getInt("mgr"));
-				e.setHiredate(rs.getDate("hiredate"));
-				e.setSal(rs.getFloat("sal"));
-				e.setComm(rs.getFloat("comm"));
-				
 				dept.getEmps().add(e);
-				
-				
-				
-			}
+				}
 		} catch (SQLException e) {
-			throw new DataRetrievalFailureException("selectAllWithEmps()", e);
+			throw new DataRetrievalFailureException("Select All With Emps()", e);
 		}
-		
-		
 		return list;
 	}
-
-	
-
-
-}
+		
+	}
